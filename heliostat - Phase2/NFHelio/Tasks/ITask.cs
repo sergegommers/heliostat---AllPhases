@@ -16,7 +16,7 @@
     string Description { get; }
 
     /// <summary>
-    /// returns detailed help of the command
+    /// returns the help of the command
     /// </summary>
     string Help { get; }
 

@@ -1,24 +1,30 @@
 ﻿namespace NFHelio.Tasks
 {
+  using System;
   using System.Device.Pwm;
   using System.Threading;
 
   /// <summary>
   /// Tests the onboard led
   /// </summary>
-  internal class TestOnboardLed : ITask
+  internal class TestOnboardLed : BaseTask
   {
     /// <inheritdoc />
-    string ITask.Command => "testled";
+    public override string Command => "testled";
 
     /// <inheritdoc />
-    string ITask.Description => "Tests the onboard led";
+    public override string Description => "Tests the onboard led";
 
     /// <inheritdoc />
-    string ITask.Help => "No further info";
+    public override string Help => "No further info";
+
+    public TestOnboardLed(IServiceProvider serviceProvider)
+      :base(serviceProvider)
+    {
+    }
 
     /// <inheritdoc />
-    public void Execute(string[] args)
+    public override void Execute(string[] args)
     {
       var pwmPin = PwmChannel.CreateFromPin((int)GPIOPort.ESP32_Onboard_Led, 40000, 0);
 
@@ -30,7 +36,7 @@
       // Stop the PWM:
       pwmPin.Stop();
 
-      Program.context.BluetoothSpp.SendString($"Done testing\n");
+      SendString($"Done testing\n");
     }
 
     private void TestChannel(PwmChannel channel)

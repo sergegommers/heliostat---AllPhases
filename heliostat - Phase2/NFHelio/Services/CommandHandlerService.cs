@@ -1,19 +1,27 @@
-﻿namespace NFHelio
+﻿namespace NFHelio.Services
 {
   using System.Collections;
   using NFHelio.Tasks;
   using System.Diagnostics;
+  using System;
 
   /// <summary>
   /// Here we check the incoming commands and start the matching tasks.
   /// </summary>
-  public class CommandHandler
+  public class CommandHandlerService : ICommandHandlerService
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CommandHandler"/> class.
-    /// </summary>
-    public CommandHandler()
+    private readonly IServiceProvider provider;
+    public readonly IAppMessageWriter appMessageWriter;
+
+    /// <summary>Initializes a new instance of the <see cref="CommandHandlerService" /> class.</summary>
+    /// <param name="provider"></param>
+    /// <param name="appMessageWriter"></param>
+    public CommandHandlerService(
+      IServiceProvider provider,
+      IAppMessageWriter appMessageWriter)
     {
+      this.provider = provider;
+      this.appMessageWriter = appMessageWriter;
     }
 
     /// <summary>
@@ -47,9 +55,10 @@
 
         var tasks = new ArrayList
         {
-          new TestOnboardLed(),
-          new FreeMem(),
-          new Reboot(),
+          new TestOnboardLed(this.provider),
+          new FindFreeRam(this.provider),
+          new FreeMem(this.provider),
+          new Reboot(this.provider),
         };
 
         switch (command)
@@ -57,8 +66,8 @@
           case "help":
             if (args.Length == 0)
             {
-              Program.context.BluetoothSpp.SendString($"help <command> for more info.\n");
-              Program.context.BluetoothSpp.SendString($"\n");
+              this.appMessageWriter.SendString($"help <command> for more info.\n");
+              this.appMessageWriter.SendString($"\n");
             }
             foreach (ITask task in tasks)
             {
@@ -66,13 +75,13 @@
               {
                 if (args[0].ToLower() == task.Command.ToLower())
                 {
-                  Program.context.BluetoothSpp.SendString($"{task.Help}\n");
+                  this.appMessageWriter.SendString($"{task.Help}\n");
                   break;
                 }
               }
               else
               {
-                Program.context.BluetoothSpp.SendString($"{task.Command}: {task.Description}\n");
+                this.appMessageWriter.SendString($"{task.Command}: {task.Description}\n");
               }
             }
             break;
@@ -87,7 +96,7 @@
               }
             }
 
-            Program.context.BluetoothSpp.SendString($"Unknown command\n");
+            this.appMessageWriter.SendString($"Unknown command\n");
 
             break;
         }
