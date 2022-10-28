@@ -23,8 +23,10 @@
     <Compile Include="GPIOPort.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\FreeMem.cs" />
     <Compile Include="Tasks\ITask.cs" />
-    <Compile Include="Tasks\TestLed.cs" />
+    <Compile Include="Tasks\Reboot.cs" />
+    <Compile Include="Tasks\TestOnboardLed.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib">

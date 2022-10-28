@@ -47,7 +47,9 @@
 
         var tasks = new ArrayList
         {
-          new TestLed(),
+          new TestOnboardLed(),
+          new FreeMem(),
+          new Reboot(),
         };
 
         switch (command)

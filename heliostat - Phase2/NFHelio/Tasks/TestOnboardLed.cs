@@ -4,9 +4,9 @@
   using System.Threading;
 
   /// <summary>
-  /// Tests the engines
+  /// Tests the onboard led
   /// </summary>
-  internal class TestLed : ITask
+  internal class TestOnboardLed : ITask
   {
     /// <inheritdoc />
     string ITask.Command => "testled";
@@ -15,7 +15,7 @@
     string ITask.Description => "Tests the onboard led";
 
     /// <inheritdoc />
-    string ITask.Help => "Flashes the onboard led";
+    string ITask.Help => "No further info";
 
     /// <inheritdoc />
     public void Execute(string[] args)
