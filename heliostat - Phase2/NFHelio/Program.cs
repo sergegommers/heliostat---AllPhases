@@ -38,7 +38,7 @@ namespace NFHelio
         .ConfigureServices(services =>
         {
           services.AddSingleton(typeof(IBluetoothSpp), typeof(NordicSpp));
-          services.AddSingleton(typeof(IAppMessageWriter), typeof(AppMessageWriter));
+          services.AddTransient(typeof(IAppMessageWriter), typeof(AppMessageWriter));
           services.AddTransient(typeof(ICommandHandlerService), typeof(CommandHandlerService));
           services.AddHostedService(typeof(BlueToothReceiver));
         });
