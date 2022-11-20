@@ -18,6 +18,7 @@
   </PropertyGroup>
   <Import Project="$(NanoFrameworkProjectSystemPath)NFProjectSystem.props" Condition="Exists('$(NanoFrameworkProjectSystemPath)NFProjectSystem.props')" />
   <ItemGroup>
+    <Compile Include="AdcReader.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Devices\AT24C32.cs" />
     <Compile Include="Devices\AT24C32EepromFactory.cs" />
@@ -40,6 +41,7 @@
     <Compile Include="Storage\JsonSettingsStorage.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\CalcSpa.cs" />
+    <Compile Include="Tasks\Calibrate.cs" />
     <Compile Include="Tasks\FindFreeRam.cs" />
     <Compile Include="Tasks\FreeMem.cs" />
     <Compile Include="Tasks\GetPosition.cs" />
@@ -48,6 +50,7 @@
     <Compile Include="Tasks\Reboot.cs" />
     <Compile Include="Tasks\SetPosition.cs" />
     <Compile Include="Tasks\SetTime.cs" />
+    <Compile Include="Tasks\TestAdc.cs" />
     <Compile Include="Tasks\TestOnboardLed.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +89,9 @@
     </Reference>
     <Reference Include="nanoFramework.System.Text">
       <HintPath>..\packages\nanoFramework.System.Text.1.2.3\lib\nanoFramework.System.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Device.Adc">
+      <HintPath>..\packages\nanoFramework.System.Device.Adc.1.0.2\lib\System.Device.Adc.dll</HintPath>
     </Reference>
     <Reference Include="System.Device.I2c">
       <HintPath>..\packages\nanoFramework.System.Device.I2c.1.0.3\lib\System.Device.I2c.dll</HintPath>

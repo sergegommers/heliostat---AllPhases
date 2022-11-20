@@ -60,6 +60,8 @@
           new GetTime(this.provider),
           new SetPosition(this.provider),
           new GetPosition(this.provider),
+          new TestAdc(this.provider),
+          new Calibrate(this.provider),
           new CalcSpa(this.provider),
           new TestOnboardLed(this.provider),
           new FindFreeRam(this.provider),
