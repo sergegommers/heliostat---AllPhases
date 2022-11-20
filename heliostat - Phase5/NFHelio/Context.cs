@@ -1,4 +1,6 @@
-﻿namespace NFHelio
+﻿using System.Threading;
+
+namespace NFHelio
 {
   public class Context
   {
@@ -9,5 +11,6 @@
     public const int AzimuthAdcChannel = 0;
     public const int ZenithAdcChannel = 3;
     public const int AdcSampleSize = 100;
+
   }
 }
