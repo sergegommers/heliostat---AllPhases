@@ -58,6 +58,8 @@ namespace NFHelio
           services.AddTransient(typeof(IAppMessageWriter), typeof(AppMessageWriter));
           services.AddTransient(typeof(ICommandHandlerService), typeof(CommandHandlerService));
           services.AddHostedService(typeof(BlueToothReceiver));
+
+          services.AddHostedService(typeof(SunFollower));
         });
 
     private static void SetupPins()

@@ -19,6 +19,7 @@
   <Import Project="$(NanoFrameworkProjectSystemPath)NFProjectSystem.props" Condition="Exists('$(NanoFrameworkProjectSystemPath)NFProjectSystem.props')" />
   <ItemGroup>
     <Compile Include="AdcReader.cs" />
+    <Compile Include="ConfigurableSchedulerService.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Devices\AT24C32.cs" />
     <Compile Include="Devices\AT24C32EepromFactory.cs" />
@@ -40,6 +41,7 @@
     <Compile Include="Services\ICommandHandlerService.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Storage\JsonSettingsStorage.cs" />
+    <Compile Include="SunFollower.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\CalcSpa.cs" />
     <Compile Include="Tasks\Calibrate.cs" />

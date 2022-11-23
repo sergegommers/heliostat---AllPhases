@@ -44,12 +44,21 @@
 
       var appMessageWriter = (IAppMessageWriter)serviceProvider.GetService(typeof(IAppMessageWriter));
 
+      var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
+      var array = new CalibrationArray(settings.Aci, settings.Acv);
+
       switch (plane)
       {
         case MotorPlane.Azimuth:
           if (angleDesired < 90 || angleDesired > 270)
           {
             Debug.WriteLine($"Angle is out of range");
+            return;
+          }
+
+          if (settings.Aci.Length < 2)
+          {
+            appMessageWriter.SendString("At least 2 calibrated points are needed for the Azimuth angles\n");
             return;
           }
 
@@ -63,6 +72,13 @@
             Debug.WriteLine($"Angle is out of range");
             return;
           }
+
+          if (settings.Aci.Length < 2)
+          {
+            appMessageWriter.SendString("At least 2 calibrated points are needed for the Zenith angles\n");
+            return;
+          }
+
           adcChannel = Context.ZenithAdcChannel;
           pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Up, 40000, 0);
           pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Down, 40000, 0);
@@ -76,8 +92,6 @@
       short value = (short)AdcReader.GetValue(adcChannel, Context.AdcSampleSize);
 
       // get the desired value using the calibrated angle/value settings
-      var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
-      var array = new CalibrationArray(settings.Aci, settings.Acv);
       array.GetCalibrationPoint(angleDesired, out short valueDesired);
 
       // determine the direction of movement
