@@ -18,28 +18,24 @@
     }
 
     /// <summary>
-    /// Gets the due time of the timer. 
+    /// Gets or sets the due time of the timer. 
     /// </summary>
     private TimeSpan Time { get; set; }
 
     /// <summary>
-    /// Gets the interval of the timer.
+    /// Gets or sets the interval of the timer.
     /// </summary>
     private TimeSpan Interval { get; set; }
-
-    /// <summary>
-    /// Gets the <see cref="Timer"/> that executes the background operation.
-    /// </summary>
-    /// <remarks>
-    /// Will return <see langword="null"/> if the background operation hasn't started.
-    /// </remarks>
-    //private virtual Timer ExecuteTimer() => _executeTimer;
 
     /// <summary>
     /// This method is called each time the timer elapses. 
     /// </summary>
     protected abstract void ExecuteAsync();
 
+    /// <summary>
+    /// Starts the timer, the ExecuteAsync method will be called every interval.
+    /// </summary>
+    /// <param name="interval">The interval.</param>
     public virtual void RunEvery(TimeSpan interval)
     {
       Interval = interval;

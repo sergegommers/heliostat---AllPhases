@@ -43,8 +43,7 @@
 
       settingsStorage.WriteSettings(settings);
 
-      var readBackSettings = settingsStorage.ReadSettings() as Settings;
-      this.SendString($"Latitude longitude set to {readBackSettings.Latitude}, {readBackSettings.Longitude}\n");
+      this.SendString($"Latitude longitude set to {settings.Latitude}, {settings.Longitude}\n");
     }
   }
 }

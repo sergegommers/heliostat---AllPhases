@@ -98,6 +98,7 @@ namespace NFHelio
     {
       var settingsStorage = (ISettingsStorage)host.Services.GetService(typeof(ISettingsStorage));
       var newSettings = settingsStorage.ReadSettings() as Settings;
+
       // if we can't read the settings then we start from scratch
       if (newSettings == null)
       {

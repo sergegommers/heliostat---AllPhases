@@ -1,11 +1,16 @@
 ﻿namespace NFHelio
 {
-  using NFCommon.Storage;
   using NFHelio.Devices;
   using NFSpa;
   using System;
   using System.Diagnostics;
 
+  /// <summary>
+  /// This class moves the mirror directly to the sun.
+  /// It implements <see cref="ConfigurableSchedulerService"/>,
+  /// so the ExecuteAsync method is called based on the interval specified in the RunEvery method of ConfigurableSchedulerService
+  /// </summary>
+  /// <seealso cref="NFHelio.ConfigurableSchedulerService" />
   public class SunFollower : ConfigurableSchedulerService
   {
     private readonly IServiceProvider serviceProvider;
@@ -15,20 +20,17 @@
       this.serviceProvider = serviceProvider;
     }
 
-    public void Do()
+    /// <inheritdoc />
+    protected override void ExecuteAsync()
     {
       var realTimeClockFactory = (IRealTimeClockFactory)this.serviceProvider.GetService(typeof(IRealTimeClockFactory));
       var realTimeClock = realTimeClockFactory.Create();
+      var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
 
-      var settingsStorage = (ISettingsStorage)this.serviceProvider.GetService(typeof(ISettingsStorage));
-
-      Debug.WriteLine($"Follower: getting the time");
+      Debug.WriteLine($"SunFollower: getting the time");
       var dt = realTimeClock.GetTime();
 
-      Debug.WriteLine($"Follower: getting the position");
-      Settings settings = settingsStorage.ReadSettings() as Settings;
-
-      Debug.WriteLine($"Follower: calculating the angles");
+      Debug.WriteLine($"SunFollower: calculating the angles");
       Spa_data spa = new()
       {
         year = dt.Year,
@@ -50,22 +52,17 @@
         short azimuth = (short)spa.azimuth;
         short zenith = (short)spa.zenith;
 
-        Debug.WriteLine($"Follower: moving the mirror to azimuth {azimuth} and zenith {zenith}");
+        Debug.WriteLine($"SunFollower: moving the mirror to azimuth {azimuth} and zenith {zenith}");
 
         var motorController = new MotorController(this.serviceProvider);
         motorController.MoveMotorToAngle(MotorPlane.Azimuth, azimuth);
 
-        Debug.WriteLine($"Follower: mirrors moved");
+        Debug.WriteLine($"SunFollower: mirrors moved");
       }
       else
       {
-        Debug.WriteLine($"Follower: calculating the angles failed with error code {result}");
+        Debug.WriteLine($"SunFollower: calculating the angles failed with error code {result}");
       }
-    }
-
-    protected override void ExecuteAsync()
-    {
-      this.Do();
     }
   }
 }

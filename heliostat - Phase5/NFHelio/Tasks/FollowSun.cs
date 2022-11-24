@@ -26,12 +26,14 @@
     public override void Execute(string[] args)
     {
       SunFollower sunFollower = null;
+
+      // get the SunFollower from the DI container, note we have to search on IHostedService
       var serviceProvider = this.GetServiceProvider();
       var services = serviceProvider.GetService(new Type[] { typeof(IHostedService) });
       foreach (var service in services)
       {
-        IHostedService hostedService = (IHostedService)service;
-        SunFollower follower = hostedService as SunFollower;
+        // is this IHostedService the SunFollower?
+        SunFollower follower = service as SunFollower;
 
         if (follower != null)
         {
@@ -45,32 +47,16 @@
         return;
       }
 
-      bool doStart = false;
-      bool doStop = false;
       switch (args[0].ToLower())
       {
         case "start":
-          doStart = true;
-          break;
+          sunFollower.RunEvery(TimeSpan.FromSeconds(60));
+          this.SendString("Following the sun...\n");
+          return;
         case "stop":
-          doStop = true;
-          break;
-      }
-
-      if (doStart)
-      {
-        sunFollower.RunEvery(TimeSpan.FromSeconds(60));
-
-        this.SendString("Following the sun...\n");
-
-        return;
-      }
-
-      if (doStop)
-      {
-        sunFollower.Stop();
+          sunFollower.Stop();
+          return;
       }
     }
   }
-
 }
