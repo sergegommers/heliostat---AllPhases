@@ -1,0 +1,68 @@
+﻿namespace NFHelio
+{
+  using NFHelio.Devices;
+  using NFSpa;
+  using System;
+  using System.Diagnostics;
+
+  /// <summary>
+  /// This class moves the mirror directly to the sun.
+  /// It implements <see cref="ConfigurableSchedulerService"/>,
+  /// so the ExecuteAsync method is called based on the interval specified in the RunEvery method of ConfigurableSchedulerService
+  /// </summary>
+  /// <seealso cref="NFHelio.ConfigurableSchedulerService" />
+  public class SunFollower : ConfigurableSchedulerService
+  {
+    private readonly IServiceProvider serviceProvider;
+
+    public SunFollower(IServiceProvider serviceProvider)
+    {
+      this.serviceProvider = serviceProvider;
+    }
+
+    /// <inheritdoc />
+    protected override void ExecuteAsync()
+    {
+      var realTimeClockFactory = (IRealTimeClockFactory)this.serviceProvider.GetService(typeof(IRealTimeClockFactory));
+      var realTimeClock = realTimeClockFactory.Create();
+      var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
+
+      Debug.WriteLine($"SunFollower: getting the time");
+      var dt = realTimeClock.GetTime();
+
+      Debug.WriteLine($"SunFollower: calculating the angles");
+      Spa_data spa = new()
+      {
+        year = dt.Year,
+        month = dt.Month,
+        day = dt.Day,
+        hour = dt.Hour,
+        minute = dt.Minute,
+        second = dt.Second,
+        longitude = settings.Longitude,
+        latitude = settings.Latitude,
+        elevation = 0,
+        function = (int)Calculator.SpaOutputs.SPA_ZA
+      };
+
+      var calculator = new Calculator();
+      var result = calculator.Spa_calculate(spa);
+      if (result == 0)
+      {
+        short azimuth = (short)spa.azimuth;
+        short zenith = (short)spa.zenith;
+
+        Debug.WriteLine($"SunFollower: moving the mirror to azimuth {azimuth} and zenith {zenith}");
+
+        var motorController = new MotorController(this.serviceProvider);
+        motorController.MoveMotorToAngle(MotorPlane.Azimuth, azimuth);
+
+        Debug.WriteLine($"SunFollower: mirrors moved");
+      }
+      else
+      {
+        Debug.WriteLine($"SunFollower: calculating the angles failed with error code {result}");
+      }
+    }
+  }
+}

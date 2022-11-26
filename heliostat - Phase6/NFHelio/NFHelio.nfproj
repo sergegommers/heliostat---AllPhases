@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <NanoFrameworkProjectSystemPath>$(MSBuildExtensionsPath)\nanoFramework\v1.0\</NanoFrameworkProjectSystemPath>
+  </PropertyGroup>
+  <Import Project="$(NanoFrameworkProjectSystemPath)NFProjectSystem.Default.props" Condition="Exists('$(NanoFrameworkProjectSystemPath)NFProjectSystem.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{11A8DD76-328B-46DF-9F39-F559912D0360};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>1175be6f-2e1f-41bc-a131-c8221826b0e4</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>NFHelio</RootNamespace>
+    <AssemblyName>NFHelio</AssemblyName>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <Import Project="$(NanoFrameworkProjectSystemPath)NFProjectSystem.props" Condition="Exists('$(NanoFrameworkProjectSystemPath)NFProjectSystem.props')" />
+  <ItemGroup>
+    <Compile Include="AdcReader.cs" />
+    <Compile Include="ConfigurableSchedulerService.cs" />
+    <Compile Include="Context.cs" />
+    <Compile Include="Devices\AT24C32.cs" />
+    <Compile Include="Devices\AT24C32EepromFactory.cs" />
+    <Compile Include="Devices\Ds3231RealTimeClock.cs" />
+    <Compile Include="Devices\Ds3231RealTimeClockFactory.cs" />
+    <Compile Include="Devices\IEeprom.cs" />
+    <Compile Include="Devices\IEepromFactory.cs" />
+    <Compile Include="Devices\InternalFlash.cs" />
+    <Compile Include="Devices\InternalFlashEepromFactory.cs" />
+    <Compile Include="Devices\IRealTimeClock.cs" />
+    <Compile Include="Devices\IRealTimeClockFactory.cs" />
+    <Compile Include="MotorController.cs" />
+    <Compile Include="Services\AppMessageWriter.cs" />
+    <Compile Include="Services\CommandHandlerService.cs" />
+    <Compile Include="GPIOPort.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BlueToothReceiver.cs" />
+    <Compile Include="Services\ICommandHandlerService.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Storage\JsonSettingsStorage.cs" />
+    <Compile Include="SunFollower.cs" />
+    <Compile Include="Tasks\BaseTask.cs" />
+    <Compile Include="Tasks\CalcSpa.cs" />
+    <Compile Include="Tasks\Calibrate.cs" />
+    <Compile Include="Tasks\FindFreeRam.cs" />
+    <Compile Include="Tasks\FollowSun.cs" />
+    <Compile Include="Tasks\FreeMem.cs" />
+    <Compile Include="Tasks\GetPosition.cs" />
+    <Compile Include="Tasks\GetTime.cs" />
+    <Compile Include="Tasks\ITask.cs" />
+    <Compile Include="Tasks\MoveMirror.cs" />
+    <Compile Include="Tasks\MoveMotor.cs" />
+    <Compile Include="Tasks\Reboot.cs" />
+    <Compile Include="Tasks\SetPosition.cs" />
+    <Compile Include="Tasks\SetTime.cs" />
+    <Compile Include="Tasks\TestAdc.cs" />
+    <Compile Include="Tasks\TestOnboardLed.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Iot.Device.Common.NumberHelper">
+      <HintPath>..\packages\nanoFramework.Iot.Device.Common.NumberHelper.1.1.113.2032\lib\Iot.Device.Common.NumberHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Iot.Device.Rtc">
+      <HintPath>..\packages\nanoFramework.Iot.Device.Rtc.1.2.47\lib\Iot.Device.Rtc.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>..\packages\nanoFramework.CoreLibrary.1.12.0\lib\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.DependencyInjection">
+      <HintPath>..\packages\nanoFramework.DependencyInjection.1.0.5\lib\nanoFramework.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.Device.Bluetooth">
+      <HintPath>..\packages\nanoFramework.Device.Bluetooth.1.1.4\lib\nanoFramework.Device.Bluetooth.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.Hardware.Esp32">
+      <HintPath>..\packages\nanoFramework.Hardware.Esp32.1.4.1\lib\nanoFramework.Hardware.Esp32.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.Hosting">
+      <HintPath>..\packages\nanoFramework.Hosting.1.0.10\lib\nanoFramework.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.Json">
+      <HintPath>..\packages\nanoFramework.Json.2.2.8\lib\nanoFramework.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.Runtime.Events">
+      <HintPath>..\packages\nanoFramework.Runtime.Events.1.10.0\lib\nanoFramework.Runtime.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.Runtime.Native">
+      <HintPath>..\packages\nanoFramework.Runtime.Native.1.5.4\lib\nanoFramework.Runtime.Native.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.System.Collections">
+      <HintPath>..\packages\nanoFramework.System.Collections.1.4.0\lib\nanoFramework.System.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.System.Text">
+      <HintPath>..\packages\nanoFramework.System.Text.1.2.3\lib\nanoFramework.System.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Device.Adc">
+      <HintPath>..\packages\nanoFramework.System.Device.Adc.1.0.2\lib\System.Device.Adc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Device.I2c">
+      <HintPath>..\packages\nanoFramework.System.Device.I2c.1.0.3\lib\System.Device.I2c.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Device.Pwm">
+      <HintPath>..\packages\nanoFramework.System.Device.Pwm.1.0.1\lib\System.Device.Pwm.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem">
+      <HintPath>..\packages\nanoFramework.System.IO.FileSystem.1.1.2\lib\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Streams">
+      <HintPath>..\packages\nanoFramework.System.IO.Streams.1.1.9\lib\System.IO.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Math">
+      <HintPath>..\packages\nanoFramework.System.Math.1.4.4\lib\System.Math.dll</HintPath>
+    </Reference>
+    <Reference Include="UnitsNet.Temperature">
+      <HintPath>..\packages\UnitsNet.nanoFramework.Temperature.4.144.0\lib\UnitsNet.Temperature.dll</HintPath>
+    </Reference>
+    <Reference Include="Windows.Storage.Streams">
+      <HintPath>..\packages\nanoFramework.Windows.Storage.Streams.1.14.2\lib\Windows.Storage.Streams.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NFCommon\NFCommon.nfproj" />
+    <ProjectReference Include="..\NFSpa\NFSpa.nfproj" />
+  </ItemGroup>
+  <Import Project="$(NanoFrameworkProjectSystemPath)NFProjectSystem.CSharp.targets" Condition="Exists('$(NanoFrameworkProjectSystemPath)NFProjectSystem.CSharp.targets')" />
+  <ProjectExtensions>
+    <ProjectCapabilities>
+      <ProjectConfigurationsDeclaredAsItems />
+    </ProjectCapabilities>
+  </ProjectExtensions>
+</Project>
