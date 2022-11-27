@@ -32,6 +32,7 @@
     <Compile Include="Devices\IRealTimeClock.cs" />
     <Compile Include="Devices\IRealTimeClockFactory.cs" />
     <Compile Include="MotorController.cs" />
+    <Compile Include="SelfCheck.cs" />
     <Compile Include="Services\AppMessageWriter.cs" />
     <Compile Include="Services\CommandHandlerService.cs" />
     <Compile Include="GPIOPort.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Tasks\MoveMirror.cs" />
     <Compile Include="Tasks\MoveMotor.cs" />
     <Compile Include="Tasks\Reboot.cs" />
+    <Compile Include="Tasks\SelfCheck.cs" />
     <Compile Include="Tasks\SetPosition.cs" />
     <Compile Include="Tasks\SetRange.cs" />
     <Compile Include="Tasks\SetTime.cs" />

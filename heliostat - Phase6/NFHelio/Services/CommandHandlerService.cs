@@ -56,6 +56,7 @@
 
         var tasks = new ArrayList
         {
+          new Selfcheck(this.provider),
           new SetTime(this.provider),
           new GetTime(this.provider),
           new SetPosition(this.provider),

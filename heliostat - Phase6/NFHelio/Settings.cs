@@ -33,8 +33,9 @@
       this.Latitude = other.Latitude;
       this.AzimuthAdcMin = other.AzimuthAdcMin;
       this.AzimuthAdcMax = other.AzimuthAdcMax;
-      this.ZenithAdcMin= other.ZenithAdcMin;
-      this.ZenithAdcMax= other.ZenithAdcMax;
+      this.ZenithAdcMin = other.ZenithAdcMin;
+      this.ZenithAdcMax = other.ZenithAdcMax;
+      this.FollowSun = other.FollowSun;
     }
 
     // Observer longitude (negative west of Greenwich)
@@ -126,11 +127,26 @@
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether we follow the sun or not
+    /// </summary>
+    public bool FollowSun
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
     /// Returns true if the movement ranges are set
     /// </summary>
-    public bool AreRangesSet()
+    public bool AreRangesSet(MotorPlane plane)
     {
-      return AzimuthAdcMin != AzimuthAdcMax && ZenithAdcMin != ZenithAdcMax;
+      switch (plane)
+      {
+        case MotorPlane.Azimuth:
+          return AzimuthAdcMin != AzimuthAdcMax;
+        default:
+          return ZenithAdcMin != ZenithAdcMax;
+      }
     }
   }
 }

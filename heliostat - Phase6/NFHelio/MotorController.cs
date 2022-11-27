@@ -45,22 +45,20 @@
 
       var appMessageWriter = (IAppMessageWriter)serviceProvider.GetService(typeof(IAppMessageWriter));
 
-      var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
-      if (!settings.AreRangesSet())
+      SelfCheck selfCheck = new SelfCheck(this.serviceProvider);
+      var issues = selfCheck.Check(plane);
+      if (!string.IsNullOrEmpty(issues))
       {
-        appMessageWriter.SendString("Movement ranges are not set\n");
+        Debug.WriteLine(issues);
+
         return;
       }
+
+      var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
 
       switch (plane)
       {
         case MotorPlane.Azimuth:
-          if (settings.Aci.Length < 2)
-          {
-            appMessageWriter.SendString("At least 2 calibrated points are needed for the Azimuth angles\n");
-            return;
-          }
-
           adcChannel = Context.AzimuthAdcChannel;
           pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_East_to_West, 40000, 0);
           pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_West_to_East, 40000, 0);
@@ -69,12 +67,6 @@
 
           break;
         case MotorPlane.Zenith:
-          if (settings.Aci.Length < 2)
-          {
-            appMessageWriter.SendString("At least 2 calibrated points are needed for the Zenith angles\n");
-            return;
-          }
-
           adcChannel = Context.ZenithAdcChannel;
           pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Up, 40000, 0);
           pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Down, 40000, 0);
@@ -224,7 +216,6 @@
 
           if (currentDutyCycle != dutyCycle)
           {
-            Debug.WriteLine($"DutyCycle: {dutyCycle}");
             currentDutyCycle = dutyCycle;
           }
 

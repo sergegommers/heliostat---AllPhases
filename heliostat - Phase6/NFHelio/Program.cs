@@ -1,5 +1,6 @@
 namespace NFHelio
 {
+  using System;
   using System.Diagnostics;
   using nanoFramework.DependencyInjection;
   using nanoFramework.Device.Bluetooth.Spp;
@@ -27,9 +28,14 @@ namespace NFHelio
 
       IHost host = CreateHostBuilder().Build();
 
+      // read the settings
       ReadSettingsFromStorage(host);
 
+      // write the setting to the debug console
       WriteOutSetttings(host);
+
+      // see if we have to start some tasks like following the sun
+      StartTasks(host);
 
       Debug.WriteLine($"HelioStat is started, awaiting commands...");
 
@@ -111,6 +117,27 @@ namespace NFHelio
       currentSettings.Update(newSettings);
     }
 
+    private static void StartTasks(IHost host)
+    {
+      var settings = (Settings)host.Services.GetService(typeof(Settings));
+
+      if (settings.FollowSun)
+      {
+        // get the SunFollower from the DI container, note we have to search on IHostedService
+        var services = host.Services.GetService(new Type[] { typeof(IHostedService) });
+        foreach (var service in services)
+        {
+          // is this IHostedService the SunFollower?
+          SunFollower sunFollower = service as SunFollower;
+
+          if (sunFollower != null)
+          {
+            sunFollower.RunEvery(TimeSpan.FromSeconds(60));
+          }
+        }
+      }
+    }
+
     private static void WriteOutSetttings(IHost host)
     {
       var settings = (Settings)host.Services.GetService(typeof(Settings));
@@ -119,6 +146,8 @@ namespace NFHelio
 
       var dt = realTimeClock.GetTime();
 
+      Debug.WriteLine($"********************");
+      Debug.WriteLine($"Following the sun: {settings.FollowSun}");
       Debug.WriteLine($"********************");
       Debug.WriteLine($"Latitude: {settings.Latitude}");
       Debug.WriteLine($"Longitude: {settings.Longitude}");

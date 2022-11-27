@@ -1,6 +1,7 @@
 ﻿namespace NFHelio.Tasks
 {
   using nanoFramework.Hosting;
+  using NFCommon.Storage;
   using System;
 
   /// <summary>
@@ -27,6 +28,12 @@
     {
       SunFollower sunFollower = null;
 
+      if (args.Length != 1)
+      {
+        this.SendString("Invalid number of arguments\n");
+        return;
+      }
+
       // get the SunFollower from the DI container, note we have to search on IHostedService
       var serviceProvider = this.GetServiceProvider();
       var services = serviceProvider.GetService(new Type[] { typeof(IHostedService) });
@@ -41,22 +48,23 @@
         }
       }
 
-      if (args.Length != 1)
-      {
-        this.SendString("Invalid number of arguments\n");
-        return;
-      }
+      var settings = (Settings)this.GetServiceProvider().GetService(typeof(Settings));
 
       switch (args[0].ToLower())
       {
         case "start":
           sunFollower.RunEvery(TimeSpan.FromSeconds(60));
+          settings.FollowSun = true;
           this.SendString("Following the sun...\n");
-          return;
+          break;
         case "stop":
           sunFollower.Stop();
-          return;
+          settings.FollowSun = false;
+          break;
       }
+
+      var settingsStorage = (ISettingsStorage)this.GetServiceProvider().GetService(typeof(ISettingsStorage));
+      settingsStorage.WriteSettings(settings);
     }
   }
 }
