@@ -29,6 +29,8 @@ namespace NFHelio
 
       ReadSettingsFromStorage(host);
 
+      WriteOutSetttings(host);
+
       Debug.WriteLine($"HelioStat is started, awaiting commands...");
 
       // starts application and blocks the main calling thread 
@@ -107,6 +109,36 @@ namespace NFHelio
 
       var currentSettings = (Settings)host.Services.GetService(typeof(Settings));
       currentSettings.Update(newSettings);
+    }
+
+    private static void WriteOutSetttings(IHost host)
+    {
+      var settings = (Settings)host.Services.GetService(typeof(Settings));
+      var realTimeClockFactory = (IRealTimeClockFactory)host.Services.GetService(typeof(IRealTimeClockFactory));
+      var realTimeClock = realTimeClockFactory.Create();
+
+      var dt = realTimeClock.GetTime();
+
+      Debug.WriteLine($"********************");
+      Debug.WriteLine($"Latitude: {settings.Latitude}");
+      Debug.WriteLine($"Longitude: {settings.Longitude}");
+      Debug.WriteLine($"DateTime: {dt.ToString("yyyy / MM / dd HH: mm:ss")}");
+      Debug.WriteLine($"********************");
+      Debug.WriteLine($"Azimuth Adc Min: {settings.AzimuthAdcMin}");
+      Debug.WriteLine($"Azimuth Adc Max: {settings.AzimuthAdcMax}");
+      Debug.WriteLine($"Zenith Adc Min: {settings.ZenithAdcMin}");
+      Debug.WriteLine($"Zenith Adc Maz: {settings.ZenithAdcMax}");
+      Debug.WriteLine($"********************");
+      for (int i = 0; i < settings.Aci.Length; i++)
+      {
+        Debug.WriteLine($"Azimuth calibration: {settings.Aci[i]} - {settings.Acv[i]}");
+      }
+      Debug.WriteLine($"********************");
+      for (int i = 0; i < settings.Zci.Length; i++)
+      {
+        Debug.WriteLine($"Zenith calibration: {settings.Zci[i]} - {settings.Zcv[i]}");
+      }
+      Debug.WriteLine($"********************");
     }
   }
 }

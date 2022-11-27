@@ -31,6 +31,10 @@
       this.Zcv = other.Zcv;
       this.Longitude = other.Longitude;
       this.Latitude = other.Latitude;
+      this.AzimuthAdcMin = other.AzimuthAdcMin;
+      this.AzimuthAdcMax = other.AzimuthAdcMax;
+      this.ZenithAdcMin= other.ZenithAdcMin;
+      this.ZenithAdcMax= other.ZenithAdcMax;
     }
 
     // Observer longitude (negative west of Greenwich)
@@ -83,6 +87,50 @@
     {
       get;
       set;
+    }
+
+    /// <summary>
+    /// Gets or sets the minimum Adc azimuth value.
+    /// </summary>
+    public short AzimuthAdcMin
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
+    /// Gets or sets the maximum Adc azimuth value.
+    /// </summary>
+    public short AzimuthAdcMax
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
+    /// Gets or sets the minimum Adc zenith value.
+    /// </summary>
+    public short ZenithAdcMin
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
+    /// Gets or sets the maximum Adc zenith value.
+    /// </summary>
+    public short ZenithAdcMax
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
+    /// Returns true if the movement ranges are set
+    /// </summary>
+    public bool AreRangesSet()
+    {
+      return AzimuthAdcMin != AzimuthAdcMax && ZenithAdcMin != ZenithAdcMax;
     }
   }
 }

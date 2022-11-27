@@ -61,6 +61,7 @@
           new SetPosition(this.provider),
           new GetPosition(this.provider),
           new TestAdc(this.provider),
+          new SetRange(this.provider),
           new Calibrate(this.provider),
           new MoveMirror(this.provider),
           new MoveMotor(this.provider),

@@ -41,21 +41,20 @@
       int adcChannel;
       PwmChannel pwmPin1;
       PwmChannel pwmPin2;
+      CalibrationArray array;
 
       var appMessageWriter = (IAppMessageWriter)serviceProvider.GetService(typeof(IAppMessageWriter));
 
       var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
-      var array = new CalibrationArray(settings.Aci, settings.Acv);
+      if (!settings.AreRangesSet())
+      {
+        appMessageWriter.SendString("Movement ranges are not set\n");
+        return;
+      }
 
       switch (plane)
       {
         case MotorPlane.Azimuth:
-          if (angleDesired < 90 || angleDesired > 270)
-          {
-            Debug.WriteLine($"Angle is out of range");
-            return;
-          }
-
           if (settings.Aci.Length < 2)
           {
             appMessageWriter.SendString("At least 2 calibrated points are needed for the Azimuth angles\n");
@@ -65,14 +64,11 @@
           adcChannel = Context.AzimuthAdcChannel;
           pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_East_to_West, 40000, 0);
           pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_West_to_East, 40000, 0);
+
+          array = new CalibrationArray(settings.Aci, settings.Acv);
+
           break;
         case MotorPlane.Zenith:
-          if (angleDesired < 90 || angleDesired > 270)
-          {
-            Debug.WriteLine($"Angle is out of range");
-            return;
-          }
-
           if (settings.Aci.Length < 2)
           {
             appMessageWriter.SendString("At least 2 calibrated points are needed for the Zenith angles\n");
@@ -82,17 +78,43 @@
           adcChannel = Context.ZenithAdcChannel;
           pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Up, 40000, 0);
           pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Down, 40000, 0);
+
+          array = new CalibrationArray(settings.Zci, settings.Zcv);
+
           break;
         default:
           appMessageWriter.SendString("Unknown plane\n");
           return;
       }
 
-      // get the current value of the motor position
-      short value = (short)AdcReader.GetValue(adcChannel, Context.AdcSampleSize);
-
       // get the desired value using the calibrated angle/value settings
       array.GetCalibrationPoint(angleDesired, out short valueDesired);
+
+      // limit the new adc value between the set ranges
+      switch (plane)
+      {
+        case MotorPlane.Azimuth:
+          {
+            short min = (short)Math.Min(settings.AzimuthAdcMin, settings.AzimuthAdcMax);
+            short max = (short)Math.Max(settings.AzimuthAdcMin, settings.AzimuthAdcMax);
+
+            valueDesired = (short)Math.Min(valueDesired, max);
+            valueDesired = (short)Math.Max(valueDesired, min);
+          }
+          break;
+        case MotorPlane.Zenith:
+          {
+            short min = (short)Math.Min(settings.ZenithAdcMin, settings.ZenithAdcMax);
+            short max = (short)Math.Max(settings.ZenithAdcMin, settings.ZenithAdcMax);
+
+            valueDesired = (short)Math.Min(valueDesired, max);
+            valueDesired = (short)Math.Max(valueDesired, min);
+          }
+          break;
+      }
+
+      // get the current value of the motor position
+      short value = (short)AdcReader.GetValue(adcChannel, Context.AdcSampleSize);
 
       // determine the direction of movement
       PwmChannel pwmPin;

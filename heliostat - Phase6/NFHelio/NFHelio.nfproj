@@ -55,6 +55,7 @@
     <Compile Include="Tasks\MoveMotor.cs" />
     <Compile Include="Tasks\Reboot.cs" />
     <Compile Include="Tasks\SetPosition.cs" />
+    <Compile Include="Tasks\SetRange.cs" />
     <Compile Include="Tasks\SetTime.cs" />
     <Compile Include="Tasks\TestAdc.cs" />
     <Compile Include="Tasks\TestOnboardLed.cs" />
