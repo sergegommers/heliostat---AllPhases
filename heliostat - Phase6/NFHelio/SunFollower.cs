@@ -56,6 +56,7 @@
 
         var motorController = new MotorController(this.serviceProvider);
         motorController.MoveMotorToAngle(MotorPlane.Azimuth, azimuth);
+        motorController.MoveMotorToAngle(MotorPlane.Zenith, zenith);
 
         Debug.WriteLine($"SunFollower: mirrors moved");
       }
