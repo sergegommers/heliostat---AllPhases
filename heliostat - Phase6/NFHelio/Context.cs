@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace NFHelio
+﻿namespace NFHelio
 {
   public class Context
   {
@@ -12,5 +10,6 @@ namespace NFHelio
     public const int ZenithAdcChannel = 3;
     public const int AdcSampleSize = 100;
 
+    public const int PwmFrequency = 20000;
   }
 }

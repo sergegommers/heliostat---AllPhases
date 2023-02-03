@@ -65,8 +65,6 @@
 
       settingsStorage.WriteSettings(settings);
 
-      var newsettings = settingsStorage.ReadSettings();
-
       this.SendString($"OK\n");
     }
   }

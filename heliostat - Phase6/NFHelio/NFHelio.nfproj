@@ -46,6 +46,7 @@
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\CalcSpa.cs" />
     <Compile Include="Tasks\Calibrate.cs" />
+    <Compile Include="Tasks\ClearSettings.cs" />
     <Compile Include="Tasks\FindFreeRam.cs" />
     <Compile Include="Tasks\FollowSun.cs" />
     <Compile Include="Tasks\FreeMem.cs" />

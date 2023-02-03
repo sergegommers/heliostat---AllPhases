@@ -69,6 +69,7 @@
           new FollowSun(this.provider),
           new CalcSpa(this.provider),
           new TestOnboardLed(this.provider),
+          new ClearSettings(this.provider),
           new FindFreeRam(this.provider),
           new FreeMem(this.provider),
           new Reboot(this.provider),

@@ -28,8 +28,11 @@
     /// <inheritdoc />
     public override void Execute(string[] args)
     {
-      SelfCheck selfCheck = new SelfCheck(this.GetServiceProvider());
-      var issues = selfCheck.Check(MotorPlane.Azimuth) + selfCheck.Check(MotorPlane.Zenith);
+      var selfCheck = new SelfCheck(this.GetServiceProvider());
+      var issues = selfCheck.Check()
+        + selfCheck.Check(MotorPlane.Azimuth)
+        + selfCheck.Check(MotorPlane.Zenith);
+
       if (string.IsNullOrEmpty(issues))
       {
         this.SendString($"All OK\n");

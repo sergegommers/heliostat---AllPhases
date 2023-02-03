@@ -24,7 +24,7 @@
     /// Checks this instance.
     /// </summary>
     /// <returns>A non empty string if there are issues</returns>
-    public string Check(MotorPlane plane)
+    public string Check()
     {
       var sb = new StringBuilder();
 
@@ -41,8 +41,21 @@
 
       if (settings.Latitude == 0.0 || settings.Latitude == 0.0)
       {
-        sb.AppendLine("Position is not set");
+        sb.AppendLine("Geographical position is not set");
       }
+
+      return sb.ToString();
+    }
+
+    /// <summary>
+    /// Checks this instance.
+    /// </summary>
+    /// <returns>A non empty string if there are issues</returns>
+    public string Check(MotorPlane plane)
+    {
+      var sb = new StringBuilder();
+
+      var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
 
       switch (plane)
       {
@@ -55,14 +68,14 @@
         default:
           if (settings.Zci.Length < 2)
           {
-            sb.AppendLine("At least 2 calibrated points are needed for the Zenith angles\n");
+            sb.AppendLine("At least 2 calibrated points are needed for the Zenith angles");
           }
           break;
       }
 
       if (!settings.AreRangesSet(plane))
       {
-        sb.AppendLine($"Movement ranges are not set for plane {plane.ToString()}");
+        sb.AppendLine($"Movement ranges are not set for plane {MotorPlaneNames.Name(plane)}");
       }
 
       return sb.ToString();

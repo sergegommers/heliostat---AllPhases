@@ -40,7 +40,7 @@
       foreach (var service in services)
       {
         // is this IHostedService the SunFollower?
-        SunFollower follower = service as SunFollower;
+        var follower = service as SunFollower;
 
         if (follower != null)
         {
@@ -60,6 +60,7 @@
         case "stop":
           sunFollower.Stop();
           settings.FollowSun = false;
+          this.SendString("Stopped following the sun.\n");
           break;
       }
 

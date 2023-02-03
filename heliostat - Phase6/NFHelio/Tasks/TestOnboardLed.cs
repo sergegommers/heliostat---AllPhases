@@ -26,7 +26,7 @@
     /// <inheritdoc />
     public override void Execute(string[] args)
     {
-      var pwmPin = PwmChannel.CreateFromPin((int)GPIOPort.ESP32_Onboard_Led, 40000, 0);
+      var pwmPin = PwmChannel.CreateFromPin((int)GPIOPort.ESP32_Onboard_Led, Context.PwmFrequency, 0);
 
       // Start the PWM
       pwmPin.Start();

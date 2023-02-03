@@ -15,6 +15,22 @@
     Zenith
   }
 
+  public static class MotorPlaneNames
+  {
+    public static string Name(MotorPlane plane)
+    {
+      switch (plane)
+      {
+        case MotorPlane.Azimuth:
+          return "Azimuth";
+        case MotorPlane.Zenith:
+          return "Zenith";
+        default:
+          return "Unknown plane";
+      }
+    }
+  }
+
   /// <summary>
   /// A class for controlling motors
   /// </summary>
@@ -45,7 +61,7 @@
 
       var appMessageWriter = (IAppMessageWriter)serviceProvider.GetService(typeof(IAppMessageWriter));
 
-      SelfCheck selfCheck = new SelfCheck(this.serviceProvider);
+      var selfCheck = new SelfCheck(this.serviceProvider);
       var issues = selfCheck.Check(plane);
       if (!string.IsNullOrEmpty(issues))
       {
@@ -60,16 +76,16 @@
       {
         case MotorPlane.Azimuth:
           adcChannel = Context.AzimuthAdcChannel;
-          pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_East_to_West, 40000, 0);
-          pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_West_to_East, 40000, 0);
+          pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_East_to_West, Context.PwmFrequency, 0);
+          pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_West_to_East, Context.PwmFrequency, 0);
 
           array = new CalibrationArray(settings.Aci, settings.Acv);
 
           break;
         case MotorPlane.Zenith:
           adcChannel = Context.ZenithAdcChannel;
-          pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Up, 40000, 0);
-          pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Down, 40000, 0);
+          pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Up, Context.PwmFrequency, 0);
+          pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Down, Context.PwmFrequency, 0);
 
           array = new CalibrationArray(settings.Zci, settings.Zcv);
 
@@ -255,12 +271,12 @@
       switch (plane)
       {
         case MotorPlane.Azimuth:
-          pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_East_to_West, 40000, 0);
-          pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_West_to_East, 40000, 0);
+          pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_East_to_West, Context.PwmFrequency, 0);
+          pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Azimuth_West_to_East, Context.PwmFrequency, 0);
           break;
         case MotorPlane.Zenith:
-          pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Up, 40000, 0);
-          pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Down, 40000, 0);
+          pwmPin1 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Up, Context.PwmFrequency, 0);
+          pwmPin2 = PwmChannel.CreateFromPin((int)GPIOPort.PWM_Zenith_Down, Context.PwmFrequency, 0);
           break;
         default:
           appMessageWriter.SendString("Unknown plane\n");
