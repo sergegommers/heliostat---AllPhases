@@ -121,19 +121,22 @@ namespace NFHelio
     {
       var settings = (Settings)host.Services.GetService(typeof(Settings));
 
-      if (settings.FollowSun)
+      // get the SunFollower from the DI container, note we have to search on IHostedService
+      var services = host.Services.GetService(new Type[] { typeof(IHostedService) });
+      foreach (var service in services)
       {
-        // get the SunFollower from the DI container, note we have to search on IHostedService
-        var services = host.Services.GetService(new Type[] { typeof(IHostedService) });
-        foreach (var service in services)
+        // is this IHostedService the SunFollower?
+        var sunFollower = service as SunFollower;
+        if (sunFollower != null && settings.FollowSun && !settings.ProjectSun)
         {
-          // is this IHostedService the SunFollower?
-          SunFollower sunFollower = service as SunFollower;
+          sunFollower.RunEvery(TimeSpan.FromSeconds(60));
+        }
 
-          if (sunFollower != null)
-          {
-            sunFollower.RunEvery(TimeSpan.FromSeconds(60));
-          }
+        // is this IHostedService the HelioStat?
+        var helioStat = service as HelioStat;
+        if (helioStat != null && settings.ProjectSun && !settings.FollowSun)
+        {
+          helioStat.RunEvery(TimeSpan.FromSeconds(60));
         }
       }
     }
@@ -156,7 +159,7 @@ namespace NFHelio
       Debug.WriteLine($"Azimuth Adc Min: {settings.AzimuthAdcMin}");
       Debug.WriteLine($"Azimuth Adc Max: {settings.AzimuthAdcMax}");
       Debug.WriteLine($"Zenith Adc Min: {settings.ZenithAdcMin}");
-      Debug.WriteLine($"Zenith Adc Maz: {settings.ZenithAdcMax}");
+      Debug.WriteLine($"Zenith Adc Max: {settings.ZenithAdcMax}");
       Debug.WriteLine($"********************");
       for (int i = 0; i < settings.Aci.Length; i++)
       {
@@ -167,6 +170,9 @@ namespace NFHelio
       {
         Debug.WriteLine($"Zenith calibration: {settings.Zci[i]} - {settings.Zcv[i]}");
       }
+      Debug.WriteLine($"********************");
+      Debug.WriteLine($"Azimuth projecting: {settings.AzimuthProjection}");
+      Debug.WriteLine($"Zenith projecting: {settings.ZenithProjection}");
       Debug.WriteLine($"********************");
     }
   }

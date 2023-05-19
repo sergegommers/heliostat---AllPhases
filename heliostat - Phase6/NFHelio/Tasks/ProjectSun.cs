@@ -5,20 +5,20 @@
   using System;
 
   /// <summary>
-  /// Follows the sun across the sky
+  /// Projects the sun to a fixed point
   /// </summary>
-  internal class FollowSun : BaseTask
+  internal class ProjectSun : BaseTask
   {
     /// <inheritdoc />
-    public override string Command => "followsun";
+    public override string Command => "projectsun";
 
     /// <inheritdoc />
-    public override string Description => "Follows the sun";
+    public override string Description => "Projects the sun";
 
     /// <inheritdoc />
-    public override string Help => "followsun <action>\nwhere action is start or stop";
+    public override string Help => "projectsun <action>\nwhere action is start or stop";
 
-    public FollowSun(IServiceProvider serviceProvider)
+    public ProjectSun(IServiceProvider serviceProvider)
       : base(serviceProvider)
     {
     }
@@ -58,18 +58,18 @@
       switch (args[0].ToLower())
       {
         case "start":
-          helioStat.Stop();
-          settings.ProjectSun = false;
-
-          sunFollower.RunEvery(TimeSpan.FromSeconds(60));
-          settings.FollowSun = true;
-
-          this.SendString("Following the sun...\n");
-          break;
-        case "stop":
           sunFollower.Stop();
           settings.FollowSun = false;
-          this.SendString("Stopped following the sun.\n");
+
+          helioStat.RunEvery(TimeSpan.FromSeconds(60));
+          settings.ProjectSun = true;
+
+          this.SendString("Projecting the sun...\n");
+          break;
+        case "stop":
+          helioStat.Stop();
+          settings.ProjectSun = false;
+          this.SendString("Stopped projecting the sun.\n");
           break;
       }
 

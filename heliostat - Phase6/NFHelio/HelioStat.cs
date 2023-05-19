@@ -6,16 +6,16 @@
   using System.Diagnostics;
 
   /// <summary>
-  /// This class moves the mirror directly to the sun.
+  /// Projects the sun to a fixed spot
   /// It implements <see cref="ConfigurableSchedulerService"/>,
   /// so the ExecuteAsync method is called based on the interval specified in the RunEvery method of ConfigurableSchedulerService
   /// </summary>
   /// <seealso cref="NFHelio.ConfigurableSchedulerService" />
-  public class SunFollower : ConfigurableSchedulerService
+  public class HelioStat : ConfigurableSchedulerService
   {
     private readonly IServiceProvider serviceProvider;
 
-    public SunFollower(IServiceProvider serviceProvider)
+    public HelioStat(IServiceProvider serviceProvider)
     {
       this.serviceProvider = serviceProvider;
     }
@@ -27,10 +27,10 @@
       var realTimeClock = realTimeClockFactory.Create();
       var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
 
-      Debug.WriteLine($"SunFollower: getting the time");
+      Debug.WriteLine($"HelioStat: getting the time");
       var dt = realTimeClock.GetTime();
 
-      Debug.WriteLine($"SunFollower: calculating the angles");
+      Debug.WriteLine($"HelioStat: calculating the angles");
       Spa_data spa = new()
       {
         year = dt.Year,
@@ -47,23 +47,23 @@
 
       var calculator = new Calculator();
       var result = calculator.Spa_calculate(spa);
-      if (result == 0)
+      if (result != 0)
       {
-        short azimuth = (short)spa.azimuth;
-        short zenith = (short)spa.zenith;
+        Debug.WriteLine($"HelioStat: calculating the spa angles failed with error code {result}");
 
-        Debug.WriteLine($"SunFollower: moving the mirror to azimuth {azimuth} and zenith {zenith}");
-
-        var motorController = new MotorController(this.serviceProvider);
-        motorController.MoveMotorToAngle(MotorPlane.Azimuth, azimuth);
-        motorController.MoveMotorToAngle(MotorPlane.Zenith, zenith);
-
-        Debug.WriteLine($"SunFollower: mirrors moved");
+        return;
       }
-      else
-      {
-        Debug.WriteLine($"SunFollower: calculating the angles failed with error code {result}");
-      }
+
+      var azimuthAngle = (settings.AzimuthProjection - spa.azimuth) / 2.0 + spa.azimuth;
+      var zenithAngle = (settings.ZenithProjection - spa.zenith) / 2.0 + spa.zenith;
+
+      Debug.WriteLine($"HelioStat: moving the mirror to azimuth {azimuthAngle} and zenith {zenithAngle}");
+
+      var motorController = new MotorController(this.serviceProvider);
+      motorController.MoveMotorToAngle(MotorPlane.Azimuth, (short)azimuthAngle);
+      motorController.MoveMotorToAngle(MotorPlane.Zenith, (short)zenithAngle);
+
+      Debug.WriteLine($"HelioStat: mirrors moved");
     }
   }
 }

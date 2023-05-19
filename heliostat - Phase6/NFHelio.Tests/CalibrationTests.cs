@@ -110,5 +110,36 @@
       Assert.True(result);
       Assert.Equal(value, (short)-1);
     }
+
+    [TestMethod]
+    public void TestReverseLookup()
+    {
+      short[] indexes = new short[] { 1, 10, 20 };
+      short[] values = new short[] { 1, 10, 40 };
+
+
+      // reverse the inputs
+      var calibrationArray = new CalibrationArray(values, indexes);
+
+      // test in between the first 2 points
+      bool result = calibrationArray.GetCalibrationPoint(5, out short value);
+      Assert.True(result);
+      Assert.Equal(value, (short)5);
+
+      // test in between the last 2 points
+      result = calibrationArray.GetCalibrationPoint(25, out value);
+      Assert.True(result);
+      Assert.Equal(value, (short)15);
+
+      // test after the 3 points
+      result = calibrationArray.GetCalibrationPoint(70, out value);
+      Assert.True(result);
+      Assert.Equal(value, (short)30);
+
+      // test before the 3 points
+      result = calibrationArray.GetCalibrationPoint(-1, out value);
+      Assert.True(result);
+      Assert.Equal(value, (short)-1);
+    }
   }
 }

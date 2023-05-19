@@ -171,6 +171,7 @@
       {
         int i1;
         int i2 = GetInsertionIndex(index);
+
         if (i2 == -1)
         {
           i2 = calibrationPoints.Count - 1;
@@ -189,7 +190,8 @@
         var p2 = (CalibrationPoint)calibrationPoints[i2];
         var p1 = (CalibrationPoint)calibrationPoints[i1];
 
-        float m = (p2.Value - p1.Value) / (p2.Index - p1.Index);
+        // do not remove the casts
+        float m = ((float)p2.Value - (float)p1.Value) / ((float)p2.Index - (float)p1.Index);
 
         float y = m * index - m * p1.Index + p1.Value;
 

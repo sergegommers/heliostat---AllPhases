@@ -136,6 +136,33 @@
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether we need to project the sun or not
+    /// </summary>
+    public bool ProjectSun
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
+    /// Gets or sets the azimuth angle to project to.
+    /// </summary>
+    public double AzimuthProjection
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
+    /// Gets or sets the zenith angle to project to.
+    /// </summary>
+    public double ZenithProjection
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
     /// Returns true if the movement ranges are set
     /// </summary>
     public bool AreRangesSet(MotorPlane plane)
