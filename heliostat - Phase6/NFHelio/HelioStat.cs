@@ -1,5 +1,6 @@
 ﻿namespace NFHelio
 {
+  using NFCommon.Services;
   using NFHelio.Devices;
   using NFSpa;
   using System;
@@ -23,6 +24,18 @@
     /// <inheritdoc />
     protected override void ExecuteAsync()
     {
+      var appMessageWriter = (IAppMessageWriter)serviceProvider.GetService(typeof(IAppMessageWriter));
+
+      var selfCheck = new SelfCheck(this.serviceProvider);
+      var issues = selfCheck.Check(
+        SelfcheckReason.Basic |
+        SelfcheckReason.MotorMovement |
+        SelfcheckReason.HelioStat);
+      if (issues)
+      {
+        return;
+      }
+
       var realTimeClockFactory = (IRealTimeClockFactory)this.serviceProvider.GetService(typeof(IRealTimeClockFactory));
       var realTimeClock = realTimeClockFactory.Create();
       var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
@@ -49,7 +62,7 @@
       var result = calculator.Spa_calculate(spa);
       if (result != 0)
       {
-        Debug.WriteLine($"HelioStat: calculating the spa angles failed with error code {result}");
+        appMessageWriter.SendString($"HelioStat: calculating the spa angles failed with error code {result}");
 
         return;
       }
@@ -57,13 +70,13 @@
       var azimuthAngle = (settings.AzimuthProjection - spa.azimuth) / 2.0 + spa.azimuth;
       var zenithAngle = (settings.ZenithProjection - spa.zenith) / 2.0 + spa.zenith;
 
-      Debug.WriteLine($"HelioStat: moving the mirror to azimuth {azimuthAngle} and zenith {zenithAngle}");
+      appMessageWriter.SendString($"HelioStat: moving the mirror to azimuth {azimuthAngle} and zenith {zenithAngle}");
 
       var motorController = new MotorController(this.serviceProvider);
       motorController.MoveMotorToAngle(MotorPlane.Azimuth, (short)azimuthAngle);
       motorController.MoveMotorToAngle(MotorPlane.Zenith, (short)zenithAngle);
 
-      Debug.WriteLine($"HelioStat: mirrors moved");
+      appMessageWriter.SendString($"HelioStat: mirrors moved");
     }
   }
 }

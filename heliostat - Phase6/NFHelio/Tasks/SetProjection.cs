@@ -100,7 +100,7 @@
       // get the angle corresponding to the motor position
       array.GetCalibrationPoint(value, out short motorAngle);
 
-      double projectionAngle = ((double)motorAngle - sunAngle) / 2.0 + sunAngle;
+      double projectionAngle = ((double)motorAngle - sunAngle) * 2.0 + sunAngle;
 
       return projectionAngle;
     }

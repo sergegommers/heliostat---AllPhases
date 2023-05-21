@@ -175,5 +175,13 @@
           return ZenithAdcMin != ZenithAdcMax;
       }
     }
+
+    /// <summary>
+    /// Returns true if the projection angles are set
+    /// </summary>
+    public bool AreProjectionsSet()
+    {
+      return AzimuthProjection != ZenithProjection;
+    }
   }
 }

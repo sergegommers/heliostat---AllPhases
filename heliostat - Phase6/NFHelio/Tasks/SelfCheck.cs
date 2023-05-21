@@ -29,17 +29,14 @@
     public override void Execute(string[] args)
     {
       var selfCheck = new SelfCheck(this.GetServiceProvider());
-      var issues = selfCheck.Check()
-        + selfCheck.Check(MotorPlane.Azimuth)
-        + selfCheck.Check(MotorPlane.Zenith);
+      var issues = selfCheck.Check(
+        SelfcheckReason.Basic |
+        SelfcheckReason.MotorMovement |
+        SelfcheckReason.HelioStat);
 
-      if (string.IsNullOrEmpty(issues))
+      if (!issues)
       {
         this.SendString($"All OK\n");
-      }
-      else
-      {
-        this.SendString(issues);
       }
     }
   }

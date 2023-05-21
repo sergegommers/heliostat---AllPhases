@@ -1,5 +1,6 @@
 ﻿namespace NFHelio
 {
+  using NFCommon.Services;
   using NFHelio.Devices;
   using NFSpa;
   using System;
@@ -23,6 +24,17 @@
     /// <inheritdoc />
     protected override void ExecuteAsync()
     {
+      var appMessageWriter = (IAppMessageWriter)serviceProvider.GetService(typeof(IAppMessageWriter));
+
+      var selfCheck = new SelfCheck(this.serviceProvider);
+      var issues = selfCheck.Check(
+        SelfcheckReason.Basic |
+        SelfcheckReason.MotorMovement);
+      if (issues)
+      {
+        return;
+      }
+
       var realTimeClockFactory = (IRealTimeClockFactory)this.serviceProvider.GetService(typeof(IRealTimeClockFactory));
       var realTimeClock = realTimeClockFactory.Create();
       var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
@@ -52,17 +64,17 @@
         short azimuth = (short)spa.azimuth;
         short zenith = (short)spa.zenith;
 
-        Debug.WriteLine($"SunFollower: moving the mirror to azimuth {azimuth} and zenith {zenith}");
+        appMessageWriter.SendString($"SunFollower: moving the mirror to azimuth {azimuth} and zenith {zenith}");
 
         var motorController = new MotorController(this.serviceProvider);
         motorController.MoveMotorToAngle(MotorPlane.Azimuth, azimuth);
         motorController.MoveMotorToAngle(MotorPlane.Zenith, zenith);
 
-        Debug.WriteLine($"SunFollower: mirrors moved");
+        appMessageWriter.SendString($"SunFollower: mirrors moved");
       }
       else
       {
-        Debug.WriteLine($"SunFollower: calculating the angles failed with error code {result}");
+        appMessageWriter.SendString($"SunFollower: calculating the angles failed with error code {result}");
       }
     }
   }

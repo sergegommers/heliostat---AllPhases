@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace NFHelio.Tasks
+﻿namespace NFHelio.Tasks
 {
+  using System;
+
   internal class MoveMirror : BaseTask
   {
     /// <inheritdoc />
@@ -42,6 +42,13 @@ namespace NFHelio.Tasks
       }
 
       short angleDesired = short.Parse(args[1]);
+
+      var selfCheck = new SelfCheck(this.GetServiceProvider());
+      var issues = selfCheck.Check(SelfcheckReason.MotorMovement);
+      if (issues)
+      {
+        return;
+      }
 
       var motorController = new MotorController(this.GetServiceProvider());
       motorController.MoveMotorToAngle(plane, angleDesired);

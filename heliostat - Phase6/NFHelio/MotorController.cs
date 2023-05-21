@@ -56,11 +56,9 @@
       var appMessageWriter = (IAppMessageWriter)serviceProvider.GetService(typeof(IAppMessageWriter));
 
       var selfCheck = new SelfCheck(this.serviceProvider);
-      var issues = selfCheck.Check(plane);
-      if (!string.IsNullOrEmpty(issues))
+      var issues = selfCheck.Check(SelfcheckReason.MotorMovement);
+      if (issues)
       {
-        Debug.WriteLine(issues);
-
         return;
       }
 
@@ -248,15 +246,6 @@
       CalibrationArray array;
 
       var appMessageWriter = (IAppMessageWriter)serviceProvider.GetService(typeof(IAppMessageWriter));
-
-      var selfCheck = new SelfCheck(this.serviceProvider);
-      var issues = selfCheck.Check(plane);
-      if (!string.IsNullOrEmpty(issues))
-      {
-        Debug.WriteLine(issues);
-
-        return;
-      }
 
       var settings = (Settings)this.serviceProvider.GetService(typeof(Settings));
 
