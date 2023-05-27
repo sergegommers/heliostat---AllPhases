@@ -65,9 +65,11 @@ namespace NFHelio
           services.AddSingleton(typeof(IBluetoothSpp), typeof(NordicSpp));
           services.AddTransient(typeof(IAppMessageWriter), typeof(AppMessageWriter));
           services.AddTransient(typeof(ICommandHandlerService), typeof(CommandHandlerService));
+
           services.AddHostedService(typeof(BlueToothReceiver));
 
           services.AddHostedService(typeof(SunFollower));
+          services.AddHostedService(typeof(HelioStat));
         });
 
     private static void SetupPins()
@@ -143,6 +145,8 @@ namespace NFHelio
 
     private static void WriteOutSetttings(IHost host)
     {
+      return;
+
       var settings = (Settings)host.Services.GetService(typeof(Settings));
       var realTimeClockFactory = (IRealTimeClockFactory)host.Services.GetService(typeof(IRealTimeClockFactory));
       var realTimeClock = realTimeClockFactory.Create();
