@@ -145,37 +145,13 @@ namespace NFHelio
 
     private static void WriteOutSetttings(IHost host)
     {
-      var settings = (Settings)host.Services.GetService(typeof(Settings));
-      var realTimeClockFactory = (IRealTimeClockFactory)host.Services.GetService(typeof(IRealTimeClockFactory));
-      var realTimeClock = realTimeClockFactory.Create();
+      var info = new Info(host.Services);
+      var lines = info.GetInfo();
 
-      var dt = realTimeClock.GetTime();
-
-      Debug.WriteLine($"********************");
-      Debug.WriteLine($"Following the sun: {settings.FollowSun}");
-      Debug.WriteLine($"********************");
-      Debug.WriteLine($"Latitude: {settings.Latitude}");
-      Debug.WriteLine($"Longitude: {settings.Longitude}");
-      Debug.WriteLine($"DateTime: {dt.ToString("yyyy / MM / dd HH: mm:ss")}");
-      Debug.WriteLine($"********************");
-      Debug.WriteLine($"Azimuth Adc Min: {settings.AzimuthAdcMin}");
-      Debug.WriteLine($"Azimuth Adc Max: {settings.AzimuthAdcMax}");
-      Debug.WriteLine($"Zenith Adc Min: {settings.ZenithAdcMin}");
-      Debug.WriteLine($"Zenith Adc Max: {settings.ZenithAdcMax}");
-      Debug.WriteLine($"********************");
-      for (int i = 0; i < settings.Aci.Length; i++)
+      foreach (var line in lines)
       {
-        Debug.WriteLine($"Azimuth calibration: {settings.Aci[i]} - {settings.Acv[i]}");
+        Debug.WriteLine((string)line);
       }
-      Debug.WriteLine($"********************");
-      for (int i = 0; i < settings.Zci.Length; i++)
-      {
-        Debug.WriteLine($"Zenith calibration: {settings.Zci[i]} - {settings.Zcv[i]}");
-      }
-      Debug.WriteLine($"********************");
-      Debug.WriteLine($"Azimuth projecting: {settings.AzimuthProjection}");
-      Debug.WriteLine($"Zenith projecting: {settings.ZenithProjection}");
-      Debug.WriteLine($"********************");
     }
   }
 }

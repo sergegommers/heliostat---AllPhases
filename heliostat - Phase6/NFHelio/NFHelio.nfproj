@@ -32,6 +32,7 @@
     <Compile Include="Devices\IRealTimeClock.cs" />
     <Compile Include="Devices\IRealTimeClockFactory.cs" />
     <Compile Include="HelioStat.cs" />
+    <Compile Include="Info.cs" />
     <Compile Include="MotorController.cs" />
     <Compile Include="SelfCheck.cs" />
     <Compile Include="Services\AppMessageWriter.cs" />
@@ -45,6 +46,7 @@
     <Compile Include="Storage\JsonSettingsStorage.cs" />
     <Compile Include="SunFollower.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
+    <Compile Include="Tasks\GetInfo.cs" />
     <Compile Include="Tasks\ProjectSun.cs" />
     <Compile Include="Tasks\SetProjection.cs" />
     <Compile Include="Tasks\CalcSpa.cs" />
