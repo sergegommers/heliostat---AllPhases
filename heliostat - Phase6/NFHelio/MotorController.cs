@@ -155,7 +155,7 @@
             {
               pwmPin.DutyCycle = 0f;
 
-              appMessageWriter.SendString($"Motor is moving in wrong direction, reverse the polarity\n");
+              appMessageWriter.SendString($"Motor {MotorPlaneNames.Name(plane)} is moving in wrong direction, reverse the polarity\n");
 
               Debug.WriteLine($"Original diff: {originalDiff}, current diff {currentDiff}");
 
@@ -172,7 +172,7 @@
             {
               pwmPin.DutyCycle = 0f;
 
-              appMessageWriter.SendString($"Mirror is not moving, check if the motor is stuck\n");
+              appMessageWriter.SendString($"Mirror {MotorPlaneNames.Name(plane)} is not moving, check if the motor is stuck\n");
 
               Debug.WriteLine($"Current diff: {originalDiff}, last checked diff {lastCheckedDiff}");
 
