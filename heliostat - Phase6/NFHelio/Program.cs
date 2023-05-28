@@ -145,8 +145,6 @@ namespace NFHelio
 
     private static void WriteOutSetttings(IHost host)
     {
-      return;
-
       var settings = (Settings)host.Services.GetService(typeof(Settings));
       var realTimeClockFactory = (IRealTimeClockFactory)host.Services.GetService(typeof(IRealTimeClockFactory));
       var realTimeClock = realTimeClockFactory.Create();
