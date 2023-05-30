@@ -212,7 +212,7 @@
             dutyCycle = Math.Abs(position - value) / 100f;
 
             // set a minimum speed at which the motor still moves
-            dutyCycle = Math.Max(dutyCycle, 0.1f);
+            dutyCycle = Math.Max(dutyCycle, 0.3f);
           }
 
           if (currentDutyCycle != dutyCycle)

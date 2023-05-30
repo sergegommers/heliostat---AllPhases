@@ -12,10 +12,10 @@
     public override string Command => "clear";
 
     /// <inheritdoc />
-    public override string Description => "Clears all settings";
+    public override string Description => "Clears the settings";
 
     /// <inheritdoc />
-    public override string Help => "No further info";
+    public override string Help => "clear <action> where action is a (all) or c (calibration)";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetPosition"/> class.
@@ -29,13 +29,30 @@
     /// <inheritdoc />
     public override void Execute(string[] args)
     {
-      var settings = new Settings();
+      if (args.Length != 1)
+      {
+        this.SendString("Invalid number of arguments\n");
+        return;
+      }
 
       var currentSettings = (Settings)this.GetServiceProvider().GetService(typeof(Settings));
-      currentSettings.Update(settings);
+
+      switch (args[0].ToLower())
+      {
+        case "a":
+          var settings = new Settings();
+          currentSettings.Update(settings);
+          break;
+        case "c":
+          currentSettings.ResetCalibration();
+          break;
+        default:
+          this.SendString("Unknown action\n");
+          return;
+      }
 
       var settingsStorage = (ISettingsStorage)this.GetServiceProvider().GetService(typeof(ISettingsStorage));
-      settingsStorage.WriteSettings(settings);
+      settingsStorage.WriteSettings(currentSettings);
 
       this.SendString($"OK\n");
     }

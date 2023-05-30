@@ -64,17 +64,17 @@
         short azimuth = (short)spa.azimuth;
         short zenith = (short)spa.zenith;
 
-        appMessageWriter.SendString($"SunFollower: moving the mirror to azimuth {azimuth} and zenith {zenith}");
+        appMessageWriter.SendString($"SunFollower: moving the mirror to azimuth {azimuth} and zenith {zenith}\n");
 
         var motorController = new MotorController(this.serviceProvider);
         motorController.MoveMotorToAngle(MotorPlane.Azimuth, azimuth);
         motorController.MoveMotorToAngle(MotorPlane.Zenith, zenith);
 
-        appMessageWriter.SendString($"SunFollower: mirrors moved");
+        appMessageWriter.SendString($"SunFollower: mirrors moved\n");
       }
       else
       {
-        appMessageWriter.SendString($"SunFollower: calculating the angles failed with error code {result}");
+        appMessageWriter.SendString($"SunFollower: calculating the angles failed with error code {result}\n");
       }
     }
   }

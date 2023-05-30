@@ -13,6 +13,11 @@
     /// </summary>
     public Settings()
     {
+      this.ResetCalibration();
+    }
+
+    public void ResetCalibration()
+    {
       this.Aci = new short[0];
       this.Acv = new short[0];
       this.Zci = new short[0];
